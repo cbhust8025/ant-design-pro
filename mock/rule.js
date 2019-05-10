@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { parse } from 'url';
 
 // mock tableListDataSource
@@ -24,6 +25,7 @@ for (let i = 0; i < 46; i += 1) {
 }
 
 function getRule(req, res, u) {
+  console.log('getRule: ', 'req-', req, '  res: ', res, '  u: ', u);
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
@@ -76,6 +78,7 @@ function getRule(req, res, u) {
 }
 
 function postRule(req, res, u, b) {
+  console.log('postRule: ', 'req-', req, '  res: ', res, '  u: ', u, ' b: ', b);
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line

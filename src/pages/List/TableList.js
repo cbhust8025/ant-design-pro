@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -358,6 +359,10 @@ class TableList extends PureComponent {
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    console.log('handleStandardTableChange enter: ');
+    console.log('pagination: ', pagination, '  filtersArg', filtersArg, '  sorter', sorter);
+    console.log('props: ', this.props);
+    console.log('this.state: ', this.state);
     const { dispatch } = this.props;
     const { formValues } = this.state;
 
@@ -442,13 +447,14 @@ class TableList extends PureComponent {
     const { dispatch, form } = this.props;
 
     form.validateFields((err, fieldsValue) => {
+      console.log('handleSearch  err', err, 'fieldsValue: ', fieldsValue);
       if (err) return;
 
       const values = {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
+      console.log('values: ', values);
       this.setState({
         formValues: values,
       });
@@ -625,11 +631,16 @@ class TableList extends PureComponent {
   }
 
   render() {
+    // console.log('data: ', data);
     const {
       rule: { data },
       loading,
     } = this.props;
+    console.log('data: ', data);
+    console.log('loading: ', loading);
+    console.log('this.props: -- render ', this.props);
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    console.log('this.state: -- render', this.state);
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -647,7 +658,7 @@ class TableList extends PureComponent {
     };
     return (
       <PageHeaderWrapper title="查询表格">
-        <Card bordered={false}>
+        <Card>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>

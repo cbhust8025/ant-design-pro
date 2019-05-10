@@ -43,6 +43,40 @@ export async function updateRule(params = {}) {
   });
 }
 
+export async function queryNetBar(params) {
+  return request(`/api/netbar?${stringify(params)}`);
+}
+
+export async function removeNetBar(params) {
+  return request('/api/netbar', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addNetBar(params) {
+  return request('/api/netbar', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateNetBar(params = {}) {
+  return request(`/api/netbar?${stringify(params.query)}`, {
+    method: 'POST',
+    data: {
+      ...params.body,
+      method: 'update',
+    },
+  });
+}
+
 export async function fakeSubmitForm(params) {
   return request('/api/forms', {
     method: 'POST',
@@ -123,4 +157,8 @@ export async function queryNotices(params = {}) {
 
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
+}
+
+export async function getStaticData() {
+  return request(`/api/home`);
 }

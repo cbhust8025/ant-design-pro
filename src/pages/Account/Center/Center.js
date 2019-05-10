@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
@@ -91,7 +92,7 @@ class Center extends PureComponent {
       location,
       children,
     } = this.props;
-
+    console.log('center: props: ', this.props);
     const operationTabList = [
       {
         key: 'articles',

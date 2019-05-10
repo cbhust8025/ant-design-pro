@@ -24,7 +24,38 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
+      { path: '/', redirect: '/homepage/homepage', authority: ['admin', 'user'] },
+      {
+        path: '/homepage',
+        name: 'homepage',
+        icon: 'dashboard',
+        routes: [
+          {
+            icon: 'profile',
+            path: '/homepage/homepage',
+            name: 'homepage',
+            component: './Home/HomePage',
+          },
+          {
+            icon: 'warning',
+            path: '/homepage/querypage',
+            name: 'querypage',
+            component: './Home/QueryPage',
+          },
+        ],
+      },
+      {
+        path: '/netbar',
+        name: 'netbar',
+        icon: 'form',
+        component: './NetBar/NetBar',
+      },
+      {
+        path: '/proxy',
+        name: 'proxy',
+        icon: 'table',
+        component: './Proxy/Proxy',
+      },
       {
         path: '/dashboard',
         name: 'dashboard',

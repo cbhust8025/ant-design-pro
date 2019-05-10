@@ -117,8 +117,8 @@ function getNetBar(req, res, u) {
 
   if (params.begintime || params.endtime) {
     // console.log('params.begintime: ', params.begintime, 'params.endtime: ', params.endtime);
-    let begintime = moment("1977-12-25").unix(Number);
-    let endtime = moment("2995-12-25").unix(Number);
+    let begintime = moment('1977-12-25').unix(Number);
+    let endtime = moment('2995-12-25').unix(Number);
     if (params.begintime) {
       // eslint-disable-next-line prefer-destructuring
       begintime = params.begintime;
@@ -128,10 +128,10 @@ function getNetBar(req, res, u) {
       endtime = params.endtime;
     }
     dataSource = dataSource.filter(
-        data =>
-          moment(data.updatedAt).unix(Number) >= begintime &&
-          moment(data.updatedAt).unix(Number) <= endtime
-      );
+      data =>
+        moment(data.updatedAt).unix(Number) >= begintime &&
+        moment(data.updatedAt).unix(Number) <= endtime
+    );
   }
 
   // 备注匹配
