@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { queryRule, removeRule, addRule, updateRule } from '@/services/api';
 
 export default {

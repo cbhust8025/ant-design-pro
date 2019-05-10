@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getStaticData } from '@/services/api';
 
 export default {

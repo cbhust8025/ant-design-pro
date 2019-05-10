@@ -67,7 +67,7 @@ class QueryPage extends Component {
       title: '日期',
       dataIndex: 'updatedAt',
       sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '收支',
@@ -182,9 +182,9 @@ class QueryPage extends Component {
       console.log('fieldsValue: ', fieldsValue);
       const values = {
         // eslint-disable-next-line object-shorthand
-        begintime: time[0],
+        begintime: time[0] !== undefined ? time[0].unix(Number) : moment('1977-12-25').unix(Number),
         // eslint-disable-next-line object-shorthand
-        endtime: time[1],
+        endtime: time[1] !== undefined ? time[1].unix(Number) : moment('2995-12-25').unix(Number),
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
@@ -221,7 +221,31 @@ class QueryPage extends Component {
     });
   };
 
+  onPanelChange = dates => {
+    // console.log("dates:", dates, "datestring: ", dateStrings);
+    console.log('onPanelChange: ', dates[0], ', to: ', dates[1]);
+    // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+    this.setState({
+      time: [
+        dates[0] !== undefined ? dates[0] : moment('1977-12-25'),
+        dates[1] !== undefined ? dates[1] : moment('2995-12-25'),
+      ],
+    });
+  };
+
   onChange = dates => {
+    // console.log("dates:", dates, "datestring: ", dateStrings);
+    console.log('onChange: ', dates[0], ', to: ', dates[1]);
+    // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+    this.setState({
+      time: [
+        dates[0] !== undefined ? dates[0] : moment('1977-12-25'),
+        dates[1] !== undefined ? dates[1] : moment('2995-12-25'),
+      ],
+    });
+  };
+
+  onOk = dates => {
     const { dispatch, form } = this.props;
     // console.log("dates:", dates, "datestring: ", dateStrings);
     console.log('From: ', dates[0], ', to: ', dates[1]);
@@ -388,9 +412,11 @@ class QueryPage extends Component {
                   本月: [moment().startOf('month'), moment().endOf('month')],
                 }}
                 showTime
-                format="YYYY/MM/DD HH:mm:ss"
+                format="YYYY/MM/DD"
                 // eslint-disable-next-line react/jsx-boolean-value
-                onOk={this.onChange}
+                onOk={this.onOk}
+                onChange={this.onChange}
+                onPanelChange={this.onPanelChange}
               />
             </FormItem>
           </Col>

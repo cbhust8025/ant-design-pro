@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { queryNetBar, removeNetBar, addNetBar, updateNetBar } from '@/services/api';
 
 export default {

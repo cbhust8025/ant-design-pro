@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Form, Input, Upload, Select, Button } from 'antd';
@@ -86,6 +87,7 @@ class BaseView extends Component {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    console.log('BaseViews - this.props:', this.props);
     return (
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>

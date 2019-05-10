@@ -77,6 +77,40 @@ export async function updateNetBar(params = {}) {
   });
 }
 
+export async function queryMNetBar(params) {
+  return request(`/api/mnetbar?${stringify(params)}`);
+}
+
+export async function removeMNetBar(params) {
+  return request('/api/mnetbar', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addMNetBar(params) {
+  return request('/api/mnetbar', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateMNetBar(params = {}) {
+  return request(`/api/mnetbar?${stringify(params.query)}`, {
+    method: 'POST',
+    data: {
+      ...params.body,
+      method: 'update',
+    },
+  });
+}
+
 export async function fakeSubmitForm(params) {
   return request('/api/forms', {
     method: 'POST',
