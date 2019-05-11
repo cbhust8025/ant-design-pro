@@ -78,6 +78,7 @@ export async function updateNetBar(params = {}) {
 }
 
 export async function queryMNetBar(params) {
+  console.log("post usl: ", `/api/mnetbar?${stringify(params)}`);
   return request(`/api/mnetbar?${stringify(params)}`);
 }
 

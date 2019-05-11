@@ -20,6 +20,7 @@ const nullSlectItem = {
 })
 class GeographicView extends PureComponent {
   componentDidMount = () => {
+    // console.log("GeographicView: componentDidMount this.props", this.props);
     const { dispatch } = this.props;
     dispatch({
       type: 'geographic/fetchProvince',
@@ -27,6 +28,7 @@ class GeographicView extends PureComponent {
   };
 
   componentDidUpdate(props) {
+    // console.log("GeographicView: componentDidUpdate this.props", this.props);
     const { dispatch, value } = this.props;
 
     if (!props.value && !!value && !!value.province) {
@@ -38,11 +40,13 @@ class GeographicView extends PureComponent {
   }
 
   getProvinceOption() {
+    // console.log("GeographicView: getProvinceOption this.props", this.props);
     const { province } = this.props;
     return this.getOption(province);
   }
 
   getCityOption = () => {
+    // console.log("GeographicView: getCityOption this.props", this.props);
     const { city } = this.props;
     return this.getOption(city);
   };
@@ -63,6 +67,7 @@ class GeographicView extends PureComponent {
   };
 
   selectProvinceItem = item => {
+    // console.log("GeographicView: selectProvinceItem this.props", this.props);
     const { dispatch, onChange } = this.props;
     dispatch({
       type: 'geographic/fetchCity',
@@ -75,6 +80,7 @@ class GeographicView extends PureComponent {
   };
 
   selectCityItem = item => {
+    // console.log("GeographicView: selectCityItem this.props", this.props);
     const { value, onChange } = this.props;
     onChange({
       province: value.province,
@@ -83,6 +89,7 @@ class GeographicView extends PureComponent {
   };
 
   conversionObject() {
+    // console.log("GeographicView: conversionObject this.props", this.props);
     const { value } = this.props;
     if (!value) {
       return {
@@ -100,6 +107,9 @@ class GeographicView extends PureComponent {
   render() {
     const { province, city } = this.conversionObject();
     const { isLoading } = this.props;
+    // console.log("GeographicView: conversionObject this.props", this.props);
+    // console.log("isLoading: ", isLoading);
+    // console.log("province: ", province, "  city: ", city);
     return (
       <Spin spinning={isLoading} wrapperClassName={styles.row}>
         <Select

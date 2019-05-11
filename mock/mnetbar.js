@@ -38,7 +38,7 @@ function getNetBar(req, res, u) {
   }
 
   const params = parse(url, true).query;
-  // console.log('getNetbar -- params: ', params);
+  console.log('getNetbar -- params: ', params);
   let dataSource = tableListDataSource;
 
   // 排序
@@ -66,7 +66,7 @@ function getNetBar(req, res, u) {
   }
 
   // 状态匹配
-  if (params.status) {
+  if (params.status && params.status != '-1') {
     const status = params.status.split(',');
     let filterDataSource = [];
     status.forEach(s => {
@@ -118,6 +118,16 @@ function getNetBar(req, res, u) {
   // 网吧名称匹配
   if (params.netbarname) {
     dataSource = dataSource.filter(data => data.netbarname.indexOf(params.netbarname) > -1);
+  }
+
+  // 网吧区域匹配
+  if (params.province && params.province != '无') {
+    dataSource = dataSource.filter(data => data.geographic.province.label === params.province);
+  }
+
+  // 网吧区域匹配
+  if (params.city && params.city != '无') {
+    dataSource = dataSource.filter(data => data.geographic.city.label === params.city);
   }
 
   let pageSize = 10;

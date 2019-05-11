@@ -72,16 +72,16 @@ class QueryPage extends Component {
     {
       title: '收支',
       dataIndex: 'budget',
-      filters: [
-        {
-          text: cost[0],
-          value: 0,
-        },
-        {
-          text: cost[1],
-          value: 1,
-        },
-      ],
+      // filters: [
+      //   {
+      //     text: cost[0],
+      //     value: 0,
+      //   },
+      //   {
+      //     text: cost[1],
+      //     value: 1,
+      //   },
+      // ],
       render(val) {
         return <Badge status={costMap[val]} text={cost[val]} />;
       },
@@ -89,20 +89,20 @@ class QueryPage extends Component {
     {
       title: '类型',
       dataIndex: 'type',
-      filters: [
-        {
-          text: buy[0],
-          value: 0,
-        },
-        {
-          text: buy[1],
-          value: 1,
-        },
-        {
-          text: buy[2],
-          value: 2,
-        },
-      ],
+      // filters: [
+      //   {
+      //     text: buy[0],
+      //     value: 0,
+      //   },
+      //   {
+      //     text: buy[1],
+      //     value: 1,
+      //   },
+      //   {
+      //     text: buy[2],
+      //     value: 2,
+      //   },
+      // ],
       render(val) {
         return <Badge status={buyMap[val]} text={buy[val]} />;
       },
@@ -296,6 +296,7 @@ class QueryPage extends Component {
                 <Select placeholder="请选择收支类型" style={{ width: '100%' }}>
                   <Option value="0">收入</Option>
                   <Option value="1">支出</Option>
+                  <Option value="-1">全部</Option>
                 </Select>
               )}
             </FormItem>
@@ -307,6 +308,7 @@ class QueryPage extends Component {
                   <Option value="0">转账</Option>
                   <Option value="1">消费</Option>
                   <Option value="2">系统充值</Option>
+                  <Option value="-1">全部</Option>
                 </Select>
               )}
             </FormItem>

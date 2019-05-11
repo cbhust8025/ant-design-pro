@@ -27,7 +27,7 @@ function getNetBar(req, res, u) {
   }
 
   const params = parse(url, true).query;
-  // console.log('getNetbar -- params: ', params);
+  console.log('getNetbar -- params: ', params);
   let dataSource = tableListDataSource;
 
   // 排序
@@ -55,7 +55,7 @@ function getNetBar(req, res, u) {
   }
 
   // 收支类型匹配
-  if (params.budget) {
+  if (params.budget && params.budget != '-1') {
     const budget = params.budget.split(',');
     let filterDataSource = [];
     budget.forEach(s => {
@@ -67,7 +67,7 @@ function getNetBar(req, res, u) {
   }
 
   // 类型匹配
-  if (params.type) {
+  if (params.type && params.type != '-1') {
     const type = params.type.split(',');
     let filterDataSource = [];
     type.forEach(s => {

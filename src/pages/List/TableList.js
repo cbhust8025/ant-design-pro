@@ -473,6 +473,7 @@ class TableList extends PureComponent {
   };
 
   handleUpdateModalVisible = (flag, record) => {
+    console.log("flag: ", flag, "  record: ", record);
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
