@@ -93,6 +93,7 @@ export async function removeMNetBar(params) {
 }
 
 export async function addMNetBar(params) {
+  console.log("addMNetBar - params: ", params)
   return request('/api/mnetbar', {
     method: 'POST',
     data: {
@@ -102,11 +103,12 @@ export async function addMNetBar(params) {
   });
 }
 
-export async function updateMNetBar(params = {}) {
-  return request(`/api/mnetbar?${stringify(params.query)}`, {
+export async function updateMNetBar(params) {
+  console.log("updateMNetBar - params: ", params)
+  return request(`/api/mnetbar`, {
     method: 'POST',
     data: {
-      ...params.body,
+      ...params,
       method: 'update',
     },
   });

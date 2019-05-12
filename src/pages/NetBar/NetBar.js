@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Component, Fragment } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { Button, DatePicker, Row, Col, Icon, Input, Form, Select, Badge, Modal, Divider } from 'antd';
+import { Button, DatePicker, Row, Col, Icon, Input, Form, Select, Badge, Modal, message, Divider } from 'antd';
 import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -35,33 +35,149 @@ const validatorGeographic = (rule, value, callback) => {
   callback();
 };
 
-Form.create()(props => {
+const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  console.log("props: ", props);
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
-      console.log('create -- err: ', err, '  fieldsValue: ', fieldsValue);
+      console.log('okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
       if (err) return;
       form.resetFields();
-      console.log('create -- err: ', err, '  fieldsValue: ', fieldsValue);
+      console.log('okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
       handleAdd(fieldsValue);
     });
   };
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="填写网吧信息"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
+      <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所在地区">
+        <span className="ant-form-text">浙江省 杭州市</span>
+      </Form.Item>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="网吧名称">
+        {form.getFieldDecorator('netbarname', {
+          rules: [{ required: true, message: '请输入至少三个字符的规则描述！', min: 1 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所属分店">
+        {form.getFieldDecorator('store', {
+          rules: [{ required: false, message: '请输入所属分店信息！' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人姓名">
+        {form.getFieldDecorator('contactname', {
+          rules: [{ required: true, message: '请输入联系人姓名！', min: 1 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人QQ">
+        {form.getFieldDecorator('contactqq', {
+          rules: [{ required: true, message: '请输入联系人QQ！', min: 1 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人电话">
+        {form.getFieldDecorator('contactphone', {
+          rules: [{ required: true, message: '请输入联系人电话！', min: 1 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="详细地址">
+        {form.getFieldDecorator('contactaddress', {
+          rules: [{ required: false, message: '请输入详细地址！' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
     </Modal>
   );
 });
+
+@Form.create()
+class UpdateForm extends PureComponent {
+  static defaultProps = {
+    handleUpdate: () => {},
+    handleUpdateModalVisible: () => {},
+    values: {},
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.formLayout = {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 13 },
+    };
+
+    console.log("UpdateForm this.props: ", this.props);
+    console.log("UpdateForm this.formLayout: ", this.formLayout);
+  };
+
+  okHandle = (key) => {
+    const { handleUpdate, form} = this.props;
+    form.validateFields((err, fieldsValue) => {
+      console.log('UpdateForm okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
+      if (err) return;
+      form.resetFields();
+      console.log('UpdateForm okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
+      handleUpdate(key, fieldsValue);
+    });
+  };
+
+  render() {
+    const { updateModalVisible, handleUpdateModalVisible, values, form} = this.props;
+    console.log("UpdateForm - render", this.props);
+    return (
+      <Modal
+        destroyOnClose
+        title="更新网吧信息"
+        onOk={() => this.okHandle(values.key)}
+        visible={updateModalVisible}
+        onCancel={() => handleUpdateModalVisible(false, values)}
+        afterClose={() => handleUpdateModalVisible()}
+      >
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所在地区">
+          <span className="ant-form-text">浙江省 杭州市</span>
+        </Form.Item>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="网吧名称">
+          {form.getFieldDecorator('netbarname', {
+            rules: [{ required: true, message: '请输入至少三个字符的规则描述！', min: 1 }],
+            initialValue: values.netbarname,
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所属分店">
+          {form.getFieldDecorator('store', {
+            rules: [{ required: false, message: '请输入所属分店信息！' }],
+            initialValue: values.store,
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人姓名">
+          {form.getFieldDecorator('contactname', {
+            rules: [{ required: true, message: '请输入联系人姓名！', min: 1 }],
+            initialValue: values.contactname,
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人QQ">
+          <span className="ant-form-text">{values.contactqq}</span>
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系人电话">
+          {form.getFieldDecorator('contactphone', {
+            rules: [{ required: true, message: '请输入联系人电话！', min: 1 }],
+            initialValue: values.contactphone.toString(),
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="详细地址">
+          {form.getFieldDecorator('contactaddress', {
+            rules: [{ required: false, message: '请输入详细地址！'}],
+            initialValue: values.contactaddress,
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+      </Modal>
+    );
+  }
+
+}
+
+
 @connect(({ query, loading }) => {
   console.log('connect: ', '  query: ', query, '  loading: ', loading);
   return {
@@ -76,6 +192,10 @@ class NetBar extends Component {
     expandForm: false,
     formValues: {},
     time: [undefined, undefined],
+    // 添加网吧，修改网吧信息用
+    modalVisible: false,
+    updateModalVisible: false,
+    stepFormValues: {},
   };
 
   columns = [
@@ -105,7 +225,14 @@ class NetBar extends Component {
       title: '到期时间',
       dataIndex: 'expiretime',
       sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => {
+        if (val === '-') {
+          return <span>-</span>;
+        } else {
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        };
+        }
+      ,
     },
     {
       title: '状态',
@@ -261,6 +388,65 @@ class NetBar extends Component {
     });
   };
 
+  handleModalVisible = flag => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  };
+
+  handleUpdateModalVisible = (flag, record) => {
+    console.log("flag: ", flag, "  record: ", record);
+    this.setState({
+      updateModalVisible: !!flag,
+      stepFormValues: record || {},
+    });
+  };
+
+  handleAdd = fields => {
+    const { dispatch } = this.props;
+    console.log("handleAdd - this.props: ", this.props);
+    console.log("handleAdd - fields: ", fields);
+    dispatch({
+      type: 'query/add',
+      payload: {
+        province: '浙江省',
+        city: '杭州市',
+        netbarname: fields.netbarname,
+        store: fields.store,
+        contactname: fields.contactname,
+        contactqq: fields.contactqq,
+        contactphone: fields.contactphone,
+        contactaddress: fields.contactaddress,
+        status: 3,
+      },
+    });
+
+    message.success('网吧创建成功');
+    this.handleModalVisible();
+  };
+
+  handleUpdate = (key, fields) => {
+    const { dispatch } = this.props;
+    const { formValues } = this.state;
+    console.log("handleUpdatefor - mValues: ", formValues);
+    console.log("handleUpdatefor - key: ", key);
+    console.log("handleUpdatefor - fields: ", fields);
+    dispatch({
+      type: 'query/update',
+      payload: {
+        key: key,
+        netbarname: fields.netbarname,
+        store: fields.store,
+        contactname: fields.contactname,
+        contactphone: fields.contactphone,
+        contactaddress: fields.contactaddress,
+      },
+    });
+
+    message.success('网吧信息修改成功');
+    this.handleUpdateModalVisible();
+  };
+
   onPanelChange = dates => {
     // console.log("dates:", dates, "datestring: ", dateStrings);
     console.log('onPanelChange: ', dates[0], ', to: ', dates[1]);
@@ -305,6 +491,15 @@ class NetBar extends Component {
           dates[1] !== undefined ? dates[1] : end_time,
         ],
       });
+
+      if (fieldsValue.geographic != undefined) {
+        if (fieldsValue.geographic.province != undefined) {
+          values.province = fieldsValue.geographic.province.label;
+          if (fieldsValue.geographic.city) {
+            values.city = fieldsValue.geographic.city.label;
+          }
+        }
+      }
 
       dispatch({
         type: 'query/fetch',
@@ -484,7 +679,37 @@ class NetBar extends Component {
     return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
-  renderEffectiveOperation() {
+  renderEffectiveOperation(record) {
+    return (
+      <Fragment>
+        <a onClick={() => {}}>续费</a>
+        <Divider type="vertical" />
+        <a>变更套餐</a>
+        <Divider type="vertical" />
+        <a>修改IP库</a>
+        <Divider type="vertical" />
+        <a onClick={() => this.handleUpdateModalVisible(true, record)}>修改信息</a>
+        <Divider type="vertical" />
+        <a href="">查看密钥</a>
+      </Fragment>
+    );
+  }
+
+  renderExpireOperation(record) {
+    return (
+      <Fragment>
+        <a onClick={() => {}}>续费</a>
+        <Divider type="vertical" />
+        <a href="">修改IP库</a>
+        <Divider type="vertical" />
+        <a onClick={() => this.handleUpdateModalVisible(true, record)}>修改信息</a>
+        <Divider type="vertical" />
+        <a href="">查看密钥</a>
+      </Fragment>
+    );
+  }
+
+  renderExpiresoonOperation(record) {
     return (
       <Fragment>
         <a onClick={() => {}}>续费</a>
@@ -493,65 +718,35 @@ class NetBar extends Component {
         <Divider type="vertical" />
         <a href="">修改IP库</a>
         <Divider type="vertical" />
-        <a href="">修改信息</a>
+        <a onClick={() => this.handleUpdateModalVisible(true, record)}>修改信息</a>
         <Divider type="vertical" />
         <a href="">查看密钥</a>
       </Fragment>
     );
   }
 
-  renderExpireOperation() {
-    return (
-      <Fragment>
-        <a onClick={() => {}}>续费</a>
-        <Divider type="vertical" />
-        <a href="">修改IP库</a>
-        <Divider type="vertical" />
-        <a href="">修改信息</a>
-        <Divider type="vertical" />
-        <a href="">查看密钥</a>
-      </Fragment>
-    );
-  }
-
-  renderExpiresoonOperation() {
-    return (
-      <Fragment>
-        <a onClick={() => {}}>续费</a>
-        <Divider type="vertical" />
-        <a href="">变更套餐</a>
-        <Divider type="vertical" />
-        <a href="">修改IP库</a>
-        <Divider type="vertical" />
-        <a href="">修改信息</a>
-        <Divider type="vertical" />
-        <a href="">查看密钥</a>
-      </Fragment>
-    );
-  }
-
-  renderNveropenOperation() {
+  renderNveropenOperation(record) {
     return (
       <Fragment>
         <a onClick={() => {}}>开通</a>
         <Divider type="vertical" />
         <a href="">修改IP库</a>
         <Divider type="vertical" />
-        <a href="">修改信息</a>
+        <a onClick={() => this.handleUpdateModalVisible(true, record)}>修改信息</a>
         <Divider type="vertical" />
         <a href="">查看密钥</a>
       </Fragment>
     );
   }
 
-  renderTrialOperation() {
+  renderTrialOperation(record) {
     return (
       <Fragment>
         <a onClick={() => {}}>开通</a>
         <Divider type="vertical" />
         <a href="">修改IP库</a>
         <Divider type="vertical" />
-        <a href="">修改信息</a>
+        <a onClick={() => this.handleUpdateModalVisible(true, record)}>修改信息</a>
         <Divider type="vertical" />
         <a href="">查看密钥</a>
       </Fragment>
@@ -570,19 +765,19 @@ class NetBar extends Component {
     if (record && record.status!= undefined) {
       switch (record.status) {
         case 0: //  生效中
-          render = this.renderEffectiveOperation();
+          render = this.renderEffectiveOperation(record);
           break;
         case 1: // 已过期
-          render = this.renderExpireOperation();
+          render = this.renderExpireOperation(record);
           break;
         case 2: // 即将过期
-          render = this.renderExpiresoonOperation();
+          render = this.renderExpiresoonOperation(record);
           break;
         case 3: // 未开通
-          render = this.renderNveropenOperation();
+          render = this.renderNveropenOperation(record);
           break;
         case 4: // 试用
-          render = this.renderTrialOperation();
+          render = this.renderTrialOperation(record);
           break;
         default: // 其他 ，一般不可能发生
           render = () => { };
@@ -600,11 +795,25 @@ class NetBar extends Component {
     console.log('data -- render: ', data);
     console.log('this.props', this.props);
     // eslint-disable-next-line no-unused-vars
-    const { selectedRows, expandForm } = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, stepFormValues, expandForm } = this.state;
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
+    const updateMethods = {
+      handleUpdateModalVisible: this.handleUpdateModalVisible,
+      handleUpdate: this.handleUpdate,
+    };
+
     return (
       <PageHeaderWrapper title="网吧管理">
         <div className={styles.tableList}>
           <div className={styles.tableListForm}>{this.renderForm()}</div>
+          <div className={styles.tableListOperator}>
+              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                添加网吧
+              </Button>
+          </div>
           <div className="pagewrap">
             <StandardTable
               selectedRows={selectedRows}
@@ -616,6 +825,14 @@ class NetBar extends Component {
             />
           </div>
         </div>
+        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        {stepFormValues && Object.keys(stepFormValues).length ? (
+          <UpdateForm
+            {...updateMethods}
+            updateModalVisible={updateModalVisible}
+            values={stepFormValues}
+          />
+        ) : null}
       </PageHeaderWrapper>
     );
   }

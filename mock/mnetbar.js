@@ -1,4 +1,6 @@
 import { parse } from 'url';
+import citys from './geographic/city.json';
+import provinces from './geographic/province.json';
 import moment from 'moment';
 
 // mock tableListDataSource
@@ -16,17 +18,34 @@ for (let i = 0; i < 34; i += 1) {
     expiretime: new Date(`2019-05-${Math.floor(i / 2) + 1}`),
     machinenum: Math.floor(Math.random() * 100),
     region: `我是一个区域${i}`,
+    store: `我是一个分店信息${i}`,
     netbarname: `我是一个网吧${i}`,
-    geographic: {
-      province: {
-        label: '浙江省',
-        key: '330000',
+    contactname: `姓名${i}`,
+    contactqq: Math.floor(Math.random() * 1000000000),
+    contactphone: Math.floor(Math.random() * 1000000000),
+    contactaddress: `我是一个详细地址${i}`,
+    geographic: [
+      {
+        province: {
+          label: '浙江省',
+          key: '330000',
+        },
+        city: {
+          label: '杭州市',
+          key: '330100',
+        },
       },
-      city: {
-        label: '杭州市',
-        key: '330100',
+      {
+        province: {
+          label: '广东省',
+          key: '440000',
+        },
+        city: {
+          label: '深圳市',
+          key: '440300',
+        },
       },
-    },
+    ][i % 2],
   });
 }
 
@@ -147,6 +166,27 @@ function getNetBar(req, res, u) {
   return res.json(result);
 }
 
+function getId(province) {
+  let filter = provinces.filter(data => data.name === province);
+  console.log("getCity - filter: ", filter);
+  if (filter.length > 0) {
+    return filter[0];
+  }
+  return {};
+}
+
+function getCity(cusprovince, city) {
+  if (cusprovince === {}) {
+    return {};
+  }
+  let filter = citys[cusprovince.id].filter(data => data.name === city);
+  console.log("getCity - filter: ", filter);
+  if (filter.length > 0) {
+    return filter[0];
+  }
+  return {};
+}
+
 function postNetBar(req, res, u, b) {
   // console.log('postNetBar: ', 'req-', req, '  res: ', res, '  u: ', u, ' b: ', b);
   let url = u;
@@ -155,7 +195,21 @@ function postNetBar(req, res, u, b) {
   }
 
   const body = (b && b.body) || req.body;
-  const { method, name, desc, key } = body;
+  console.log('postNetbar: body - ', body);
+  const {
+    method,
+    netbarname,
+    key,
+    status,
+    province,
+    city,
+    store,
+    contactname,
+    contactqq,
+    contactphone,
+    contactaddress,
+  } = body;
+
 
   switch (method) {
     /* eslint no-case-declarations:0 */
@@ -164,29 +218,38 @@ function postNetBar(req, res, u, b) {
       break;
     case 'post':
       const i = Math.ceil(Math.random() * 10000);
+      let cusprovince = getId(province);
+      let cuscity = getCity(cusprovince, city);
+      console.log("cusprovince: ", cusprovince);
+      console.log("cuscity: ", cuscity);
       tableListDataSource.unshift({
         key: i,
         // disabled: i % 6 === 0, 提供这个值可以灰掉前面的复选框
         callNo: Math.floor(Math.random() * 100),
-        updatedAt: new Date(`2019-05-${Math.floor(i / 2) + 1}`),
-        createdAt: new Date(`2019-05-${Math.floor(i / 2) + 1}`),
+        updatedAt: new Date(),
+        createdAt: new Date(),
         progress: Math.ceil(Math.random() * 100),
-        qqno: Math.floor(Math.random() * 1000000000),
+        qqno: '-',
         budget: Math.floor(Math.random() * 10) % 2,
         type: Math.floor(Math.random() * 10) % 3,
-        status: Math.floor(Math.random() * 10) % 5,
-        expiretime: new Date(`2019-05-${Math.floor(i / 2) + 1}`),
+        status: status,
+        expiretime: '-',
         machinenum: Math.floor(Math.random() * 100),
         region: `我是一个区域${i}`,
-        netbarname: `我是一个网吧${i}`,
+        store: store,
+        netbarname: netbarname,
+        contactname: contactname,
+        contactqq: contactqq,
+        contactphone: contactphone,
+        contactaddress: contactaddress,
         geographic: {
           province: {
-            label: '浙江省',
-            key: '330000',
+            label: cusprovince.name,
+            key: cusprovince.id
           },
           city: {
-            label: '杭州市',
-            key: '330100',
+            label: cuscity.name,
+            key: cuscity.id
           },
         },
       });
@@ -194,7 +257,15 @@ function postNetBar(req, res, u, b) {
     case 'update':
       tableListDataSource = tableListDataSource.map(item => {
         if (item.key === key) {
-          Object.assign(item, { desc, name });
+          console.log("item: ", item);
+          Object.assign(item, {
+            store,
+            netbarname,
+            contactname,
+            contactqq,
+            contactphone,
+            contactaddress,
+          });
           return item;
         }
         return item;

@@ -25,7 +25,7 @@ for (let i = 0; i < 46; i += 1) {
 }
 
 function getRule(req, res, u) {
-  console.log('getRule: ', 'req-', req, '  res: ', res, '  u: ', u);
+  // console.log('getRule: ', 'req-', req, '  res: ', res, '  u: ', u);
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
@@ -78,15 +78,18 @@ function getRule(req, res, u) {
 }
 
 function postRule(req, res, u, b) {
-  console.log('postRule: ', 'req-', req, '  res: ', res, '  u: ', u, ' b: ', b);
+  // console.log('postRule: ', 'req-', req, '  res: ', res, '  u: ', u, ' b: ', b);
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
   }
 
   const body = (b && b.body) || req.body;
+  console.log("body: ", body);
   const { method, name, desc, key } = body;
-
+  console.log("name: ", name);
+  console.log("desc: ", desc);
+  console.log("key: ", key);
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':

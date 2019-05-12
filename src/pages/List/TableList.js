@@ -45,6 +45,7 @@ const CreateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
+      console.log("fieldsValue: ", fieldsValue);
       form.resetFields();
       handleAdd(fieldsValue);
     });
