@@ -1,7 +1,20 @@
 /* eslint-disable no-console */
 import React, { PureComponent, Component, Fragment } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { Button, DatePicker, Row, Col, Icon, Input, Form, Select, Badge, Modal, message, Divider } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Row,
+  Col,
+  Icon,
+  Input,
+  Form,
+  Select,
+  Badge,
+  Modal,
+  message,
+  Divider,
+} from 'antd';
 import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -13,8 +26,8 @@ import styles from './NetBar.less';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const begin_time = moment('1977-12-25');
-const end_time = moment('2995-12-25');
+const btime = moment('1977-12-25');
+const etime = moment('2995-12-25');
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -37,7 +50,7 @@ const validatorGeographic = (rule, value, callback) => {
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  console.log("props: ", props);
+  console.log('props: ', props);
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       console.log('okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
@@ -108,12 +121,12 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
 
-    console.log("UpdateForm this.props: ", this.props);
-    console.log("UpdateForm this.formLayout: ", this.formLayout);
-  };
+    console.log('UpdateForm this.props: ', this.props);
+    console.log('UpdateForm this.formLayout: ', this.formLayout);
+  }
 
-  okHandle = (key) => {
-    const { handleUpdate, form} = this.props;
+  okHandle = key => {
+    const { handleUpdate, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       console.log('UpdateForm okHandle -- err: ', err, '  fieldsValue: ', fieldsValue);
       if (err) return;
@@ -124,8 +137,8 @@ class UpdateForm extends PureComponent {
   };
 
   render() {
-    const { updateModalVisible, handleUpdateModalVisible, values, form} = this.props;
-    console.log("UpdateForm - render", this.props);
+    const { updateModalVisible, handleUpdateModalVisible, values, form } = this.props;
+    console.log('UpdateForm - render', this.props);
     return (
       <Modal
         destroyOnClose
@@ -167,16 +180,14 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="详细地址">
           {form.getFieldDecorator('contactaddress', {
-            rules: [{ required: false, message: '请输入详细地址！'}],
+            rules: [{ required: false, message: '请输入详细地址！' }],
             initialValue: values.contactaddress,
           })(<Input placeholder="请输入" />)}
         </FormItem>
       </Modal>
     );
   }
-
 }
-
 
 @connect(({ query, loading }) => {
   console.log('connect: ', '  query: ', query, '  loading: ', loading);
@@ -207,7 +218,7 @@ class NetBar extends Component {
       title: '区域',
       dataIndex: 'geographic',
       sorter: true,
-      render: val => <span>{val.province.label + ' ' + val.city.label}</span>,
+      render: val => <span>{ val.province.label + " " + val.city.label }</span>,
     },
     {
       title: '网吧名称',
@@ -226,13 +237,12 @@ class NetBar extends Component {
       dataIndex: 'expiretime',
       sorter: true,
       render: val => {
+        let rend = <span>{moment(val).format('YYYY-MM-DD')}</span>;
         if (val === '-') {
-          return <span>-</span>;
-        } else {
-          return <span>{moment(val).format('YYYY-MM-DD')}</span>
-        };
+          rend = <span>-</span>;
         }
-      ,
+        return rend;
+      },
     },
     {
       title: '状态',
@@ -337,11 +347,11 @@ class NetBar extends Component {
       // console.log("err: ", err);
       if (err) return;
       console.log('handleSearch - fieldsValue: ', fieldsValue);
-      let values = {
+      const values = {
         // eslint-disable-next-line object-shorthand
-        begintime: time[0] !== undefined ? time[0].unix(Number) : begin_time.unix(Number),
+        begintime: time[0] !== undefined ? time[0].unix(Number) : btime.unix(Number),
         // eslint-disable-next-line object-shorthand
-        endtime: time[1] !== undefined ? time[1].unix(Number) : end_time.unix(Number),
+        endtime: time[1] !== undefined ? time[1].unix(Number) : etime.unix(Number),
         ...fieldsValue,
       };
       console.log('search : values', values);
@@ -349,8 +359,8 @@ class NetBar extends Component {
         formValues: values,
       });
 
-      if (fieldsValue.geographic != undefined) {
-        if (fieldsValue.geographic.province != undefined) {
+      if (fieldsValue.geographic !== undefined) {
+        if (fieldsValue.geographic.province !== undefined) {
           values.province = fieldsValue.geographic.province.label;
           if (fieldsValue.geographic.city) {
             values.city = fieldsValue.geographic.city.label;
@@ -395,7 +405,7 @@ class NetBar extends Component {
   };
 
   handleUpdateModalVisible = (flag, record) => {
-    console.log("flag: ", flag, "  record: ", record);
+    console.log('flag: ', flag, '  record: ', record);
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
@@ -404,8 +414,8 @@ class NetBar extends Component {
 
   handleAdd = fields => {
     const { dispatch } = this.props;
-    console.log("handleAdd - this.props: ", this.props);
-    console.log("handleAdd - fields: ", fields);
+    console.log('handleAdd - this.props: ', this.props);
+    console.log('handleAdd - fields: ', fields);
     dispatch({
       type: 'query/add',
       payload: {
@@ -428,13 +438,13 @@ class NetBar extends Component {
   handleUpdate = (key, fields) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    console.log("handleUpdatefor - mValues: ", formValues);
-    console.log("handleUpdatefor - key: ", key);
-    console.log("handleUpdatefor - fields: ", fields);
+    console.log('handleUpdatefor - mValues: ', formValues);
+    console.log('handleUpdatefor - key: ', key);
+    console.log('handleUpdatefor - fields: ', fields);
     dispatch({
       type: 'query/update',
       payload: {
-        key: key,
+        key,
         netbarname: fields.netbarname,
         store: fields.store,
         contactname: fields.contactname,
@@ -452,10 +462,7 @@ class NetBar extends Component {
     console.log('onPanelChange: ', dates[0], ', to: ', dates[1]);
     // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
     this.setState({
-      time: [
-        dates[0] !== undefined ? dates[0] : begin_time,
-        dates[1] !== undefined ? dates[1] : end_time,
-      ],
+      time: [dates[0] !== undefined ? dates[0] : btime, dates[1] !== undefined ? dates[1] : etime],
     });
   };
 
@@ -478,8 +485,8 @@ class NetBar extends Component {
       if (err) return;
       console.log('fieldsValue: ', fieldsValue);
       const values = {
-        begintime: dates[0] !== undefined ? dates[0].unix(Number) : begin_time.unix(Number),
-        endtime: dates[1] !== undefined ? dates[1].unix(Number) : end_time.unix(Number),
+        begintime: dates[0] !== undefined ? dates[0].unix(Number) : btime.unix(Number),
+        endtime: dates[1] !== undefined ? dates[1].unix(Number) : etime.unix(Number),
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
@@ -487,13 +494,13 @@ class NetBar extends Component {
       this.setState({
         formValues: values,
         time: [
-          dates[0] !== undefined ? dates[0] : begin_time,
-          dates[1] !== undefined ? dates[1] : end_time,
+          dates[0] !== undefined ? dates[0] : btime,
+          dates[1] !== undefined ? dates[1] : etime,
         ],
       });
 
-      if (fieldsValue.geographic != undefined) {
-        if (fieldsValue.geographic.province != undefined) {
+      if (fieldsValue.geographic !== undefined) {
+        if (fieldsValue.geographic.province !== undefined) {
           values.province = fieldsValue.geographic.province.label;
           if (fieldsValue.geographic.city) {
             values.city = fieldsValue.geographic.city.label;
@@ -512,9 +519,9 @@ class NetBar extends Component {
     console.log('renderSimpleForm this.props: ', this.props);
     const {
       form: { getFieldDecorator },
-      query: { data },
+      // query: { data },
     } = this.props;
-    console.log('fieldsValue: ', this.state.formValues);
+    // console.log('fieldsValue: ', this.state.formValues);
     // console.log('renderSimpleForm - data: ', data);
     // const options = data.list.map(d => <Option key={d.value}>{d.text}</Option>);
     return (
@@ -754,15 +761,15 @@ class NetBar extends Component {
   }
 
   renderOperation(text, record) {
-    console.log("renderOperation -- text, ", text, " record: ", record);
-    var render = () => { };
+    console.log('renderOperation -- text, ', text, ' record: ', record);
+    let render = () => {};
     // <Option value="0">生效中</Option>
     // <Option value="1">已过期</Option>
     // <Option value="2">即将到期</Option>
     // <Option value="3">未开通</Option>
     // <Option value="4">试用</Option>
     // const statusMap = ['effective', 'expire', 'expiresoon', 'neveropen', 'trial'];
-    if (record && record.status!= undefined) {
+    if (record && record.status !== undefined) {
       switch (record.status) {
         case 0: //  生效中
           render = this.renderEffectiveOperation(record);
@@ -779,8 +786,9 @@ class NetBar extends Component {
         case 4: // 试用
           render = this.renderTrialOperation(record);
           break;
-        default: // 其他 ，一般不可能发生
-          render = () => { };
+        default:
+          // 其他 ，一般不可能发生
+          render = () => {};
           break;
       }
     }
@@ -795,7 +803,14 @@ class NetBar extends Component {
     console.log('data -- render: ', data);
     console.log('this.props', this.props);
     // eslint-disable-next-line no-unused-vars
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues, expandForm } = this.state;
+    const {
+      selectedRows,
+      modalVisible,
+      updateModalVisible,
+      stepFormValues,
+      expandForm,
+    } = this.state;
+    console.log("expandForm: ", expandForm);
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -810,9 +825,9 @@ class NetBar extends Component {
         <div className={styles.tableList}>
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                添加网吧
-              </Button>
+            <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+              添加网吧
+            </Button>
           </div>
           <div className="pagewrap">
             <StandardTable

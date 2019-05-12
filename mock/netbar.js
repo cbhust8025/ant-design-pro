@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { parse } from 'url';
 import moment from 'moment';
 
@@ -55,7 +56,7 @@ function getNetBar(req, res, u) {
   }
 
   // 收支类型匹配
-  if (params.budget && params.budget != '-1') {
+  if (params.budget && params.budget !== '-1') {
     const budget = params.budget.split(',');
     let filterDataSource = [];
     budget.forEach(s => {
@@ -67,7 +68,7 @@ function getNetBar(req, res, u) {
   }
 
   // 类型匹配
-  if (params.type && params.type != '-1') {
+  if (params.type && params.type !== '-1') {
     const type = params.type.split(',');
     let filterDataSource = [];
     type.forEach(s => {

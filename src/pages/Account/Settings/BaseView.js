@@ -53,7 +53,7 @@ const validatorPhone = (rule, value, callback) => {
 };
 
 @connect(({ user }) => {
-  console.log("connect - user: ", user);
+  console.log('connect - user: ', user);
   return {
     currentUser: user.currentUser,
   };

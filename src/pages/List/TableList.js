@@ -45,7 +45,7 @@ const CreateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log("fieldsValue: ", fieldsValue);
+      console.log('fieldsValue: ', fieldsValue);
       form.resetFields();
       handleAdd(fieldsValue);
     });
@@ -474,7 +474,7 @@ class TableList extends PureComponent {
   };
 
   handleUpdateModalVisible = (flag, record) => {
-    console.log("flag: ", flag, "  record: ", record);
+    console.log('flag: ', flag, '  record: ', record);
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},

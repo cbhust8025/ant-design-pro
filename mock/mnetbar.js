@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import { parse } from 'url';
+import moment from 'moment';
 import citys from './geographic/city.json';
 import provinces from './geographic/province.json';
-import moment from 'moment';
 
 // mock tableListDataSource
 let tableListDataSource = [];
@@ -85,7 +86,7 @@ function getNetBar(req, res, u) {
   }
 
   // 状态匹配
-  if (params.status && params.status != '-1') {
+  if (params.status && params.status !== '-1') {
     const status = params.status.split(',');
     let filterDataSource = [];
     status.forEach(s => {
@@ -140,12 +141,12 @@ function getNetBar(req, res, u) {
   }
 
   // 网吧区域匹配
-  if (params.province && params.province != '无') {
+  if (params.province && params.province !== '无') {
     dataSource = dataSource.filter(data => data.geographic.province.label === params.province);
   }
 
   // 网吧区域匹配
-  if (params.city && params.city != '无') {
+  if (params.city && params.city !== '无') {
     dataSource = dataSource.filter(data => data.geographic.city.label === params.city);
   }
 
@@ -167,8 +168,8 @@ function getNetBar(req, res, u) {
 }
 
 function getId(province) {
-  let filter = provinces.filter(data => data.name === province);
-  console.log("getCity - filter: ", filter);
+  const filter = provinces.filter(data => data.name === province);
+  console.log('getCity - filter: ', filter);
   if (filter.length > 0) {
     return filter[0];
   }
@@ -179,8 +180,8 @@ function getCity(cusprovince, city) {
   if (cusprovince === {}) {
     return {};
   }
-  let filter = citys[cusprovince.id].filter(data => data.name === city);
-  console.log("getCity - filter: ", filter);
+  const filter = citys[cusprovince.id].filter(data => data.name === city);
+  console.log('getCity - filter: ', filter);
   if (filter.length > 0) {
     return filter[0];
   }
@@ -210,7 +211,6 @@ function postNetBar(req, res, u, b) {
     contactaddress,
   } = body;
 
-
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':
@@ -218,10 +218,10 @@ function postNetBar(req, res, u, b) {
       break;
     case 'post':
       const i = Math.ceil(Math.random() * 10000);
-      let cusprovince = getId(province);
-      let cuscity = getCity(cusprovince, city);
-      console.log("cusprovince: ", cusprovince);
-      console.log("cuscity: ", cuscity);
+      const cusprovince = getId(province);
+      const cuscity = getCity(cusprovince, city);
+      console.log('cusprovince: ', cusprovince);
+      console.log('cuscity: ', cuscity);
       tableListDataSource.unshift({
         key: i,
         // disabled: i % 6 === 0, 提供这个值可以灰掉前面的复选框
@@ -232,24 +232,24 @@ function postNetBar(req, res, u, b) {
         qqno: '-',
         budget: Math.floor(Math.random() * 10) % 2,
         type: Math.floor(Math.random() * 10) % 3,
-        status: status,
+        status,
         expiretime: '-',
         machinenum: Math.floor(Math.random() * 100),
         region: `我是一个区域${i}`,
-        store: store,
-        netbarname: netbarname,
-        contactname: contactname,
-        contactqq: contactqq,
-        contactphone: contactphone,
-        contactaddress: contactaddress,
+        store,
+        netbarname,
+        contactname,
+        contactqq,
+        contactphone,
+        contactaddress,
         geographic: {
           province: {
             label: cusprovince.name,
-            key: cusprovince.id
+            key: cusprovince.id,
           },
           city: {
             label: cuscity.name,
-            key: cuscity.id
+            key: cuscity.id,
           },
         },
       });
@@ -257,7 +257,7 @@ function postNetBar(req, res, u, b) {
     case 'update':
       tableListDataSource = tableListDataSource.map(item => {
         if (item.key === key) {
-          console.log("item: ", item);
+          console.log('item: ', item);
           Object.assign(item, {
             store,
             netbarname,

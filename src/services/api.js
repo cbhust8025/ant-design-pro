@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
@@ -78,7 +79,7 @@ export async function updateNetBar(params = {}) {
 }
 
 export async function queryMNetBar(params) {
-  console.log("post usl: ", `/api/mnetbar?${stringify(params)}`);
+  console.log('post usl: ', `/api/mnetbar?${stringify(params)}`);
   return request(`/api/mnetbar?${stringify(params)}`);
 }
 
@@ -93,7 +94,7 @@ export async function removeMNetBar(params) {
 }
 
 export async function addMNetBar(params) {
-  console.log("addMNetBar - params: ", params)
+  console.log('addMNetBar - params: ', params);
   return request('/api/mnetbar', {
     method: 'POST',
     data: {
@@ -104,7 +105,7 @@ export async function addMNetBar(params) {
 }
 
 export async function updateMNetBar(params) {
-  console.log("updateMNetBar - params: ", params)
+  console.log('updateMNetBar - params: ', params);
   return request(`/api/mnetbar`, {
     method: 'POST',
     data: {
